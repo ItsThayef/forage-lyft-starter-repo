@@ -1,5 +1,5 @@
 import unittest
-from datetime import datetime
+from datetime import datetime, date
 
 from engine.model.calliope import Calliope
 from engine.model.glissade import Glissade
