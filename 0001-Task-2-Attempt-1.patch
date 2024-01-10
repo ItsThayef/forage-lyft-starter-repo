@@ -1,0 +1,73 @@
+From 3fd13d9640aa9894a6ec380e41663d455eb78328 Mon Sep 17 00:00:00 2001
+From: ItsThayef <psn.thayef@gmail.com>
+Date: Wed, 10 Jan 2024 21:14:03 +0000
+Subject: [PATCH] Task 2 - Attempt 1
+
+Made basic classes for battery classes and a testing file to check if methods will work
+---
+ engine/battery/__init__.py         |  0
+ engine/battery/nubbin_battery.py   | 11 +++++++++++
+ engine/battery/spindler_battery.py | 11 +++++++++++
+ engine/battery/test.py             |  8 ++++++++
+ 4 files changed, 30 insertions(+)
+ create mode 100644 engine/battery/__init__.py
+ create mode 100644 engine/battery/nubbin_battery.py
+ create mode 100644 engine/battery/spindler_battery.py
+ create mode 100644 engine/battery/test.py
+
+diff --git a/engine/battery/__init__.py b/engine/battery/__init__.py
+new file mode 100644
+index 0000000..e69de29
+diff --git a/engine/battery/nubbin_battery.py b/engine/battery/nubbin_battery.py
+new file mode 100644
+index 0000000..2b94d41
+--- /dev/null
++++ b/engine/battery/nubbin_battery.py
+@@ -0,0 +1,11 @@
++from abc import ABC
++from datetime import date
++from car import Car
++class NubbinBattery(Car, ABC):
++
++    def __init__(self, last_service_date, current_mileage, last_service_mileage):
++        super().__init__(last_service_date)
++        self.last_service_date = last_service_date
++
++    def battery_should_be_serviced(self):
++        return (date.today() - self.last_service_date)/365 < 24
+\ No newline at end of file
+diff --git a/engine/battery/spindler_battery.py b/engine/battery/spindler_battery.py
+new file mode 100644
+index 0000000..8e4eac4
+--- /dev/null
++++ b/engine/battery/spindler_battery.py
+@@ -0,0 +1,11 @@
++from abc import ABC
++from datetime import date
++from car import Car
++class SpindlerBattery(Car, ABC):
++
++    def __init__(self, last_service_date, current_mileage, last_service_mileage):
++        super().__init__(last_service_date)
++        self.last_service_date = last_service_date
++
++    def battery_should_be_serviced(self):
++        return (date.today() - self.last_service_date)/365 < 2
+diff --git a/engine/battery/test.py b/engine/battery/test.py
+new file mode 100644
+index 0000000..f6258f8
+--- /dev/null
++++ b/engine/battery/test.py
+@@ -0,0 +1,8 @@
++from datetime import date
++
++s = date.today()-date(2003,1,5)
++y = s.days/365
++print(y)
++#print(y < 20)
++
++#------
+\ No newline at end of file
+-- 
+2.39.3 (Apple Git-145)
+
