@@ -8,4 +8,4 @@ class NubbinBattery(Car, ABC):
         self.last_service_date = last_service_date
 
     def battery_should_be_serviced(self):
-        return (date.today() - self.last_service_date)/365 < 24
+        return (date.today() - self.last_service_date)/365 < 4
