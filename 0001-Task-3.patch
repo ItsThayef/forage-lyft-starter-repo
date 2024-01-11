@@ -1,0 +1,257 @@
+From 54b10c8f0834df4c09d15549a3b30a81855d2f2e Mon Sep 17 00:00:00 2001
+From: ItsThayef <psn.thayef@gmail.com>
+Date: Thu, 11 Jan 2024 00:23:26 +0000
+Subject: [PATCH] Task 3
+
+---
+ battery/nubbin_battery.py                  |  5 +++--
+ battery/spindler_battery.py                |  5 +++--
+ engine/capulet_engine.py                   |  2 +-
+ engine/sternman_engine.py                  |  2 +-
+ engine/willoughby_engine.py                |  2 +-
+ test/test_battery/__init__.py              |  0
+ test/test_battery/test_nubbin_battery.py   | 21 +++++++++++++++++
+ test/test_battery/test_spindler_battery.py | 26 ++++++++++++++++++++++
+ test/test_car.py                           |  2 +-
+ test/test_engine/__init__.py               |  0
+ test/test_engine/test_capulet_engine.py    | 23 +++++++++++++++++++
+ test/test_engine/test_sternman_engine.py   | 21 +++++++++++++++++
+ test/test_engine/test_willoughby_engine.py | 23 +++++++++++++++++++
+ 13 files changed, 124 insertions(+), 8 deletions(-)
+ create mode 100644 test/test_battery/__init__.py
+ create mode 100644 test/test_battery/test_nubbin_battery.py
+ create mode 100644 test/test_battery/test_spindler_battery.py
+ create mode 100644 test/test_engine/__init__.py
+ create mode 100644 test/test_engine/test_capulet_engine.py
+ create mode 100644 test/test_engine/test_sternman_engine.py
+ create mode 100644 test/test_engine/test_willoughby_engine.py
+
+diff --git a/battery/nubbin_battery.py b/battery/nubbin_battery.py
+index 8e22923..c98307d 100644
+--- a/battery/nubbin_battery.py
++++ b/battery/nubbin_battery.py
+@@ -7,5 +7,6 @@ class NubbinBattery(Car, ABC):
+         super().__init__(last_service_date)
+         self.last_service_date = last_service_date
+ 
+-    def battery_should_be_serviced(self):
+-        return (date.today() - self.last_service_date)/365 < 4
+\ No newline at end of file
++    def needs_service(self):
++        x = date.today() - self.last_service_date
++        return (x.days/365) >= 4
+\ No newline at end of file
+diff --git a/battery/spindler_battery.py b/battery/spindler_battery.py
+index 8e4eac4..1e4e572 100644
+--- a/battery/spindler_battery.py
++++ b/battery/spindler_battery.py
+@@ -7,5 +7,6 @@ class SpindlerBattery(Car, ABC):
+         super().__init__(last_service_date)
+         self.last_service_date = last_service_date
+ 
+-    def battery_should_be_serviced(self):
+-        return (date.today() - self.last_service_date)/365 < 2
++    def needs_service(self):
++        x = date.today() - self.last_service_date
++        return (x.days/365) >= 2
+\ No newline at end of file
+diff --git a/engine/capulet_engine.py b/engine/capulet_engine.py
+index 69a2f33..6488d9e 100644
+--- a/engine/capulet_engine.py
++++ b/engine/capulet_engine.py
+@@ -9,5 +9,5 @@ class CapuletEngine(Car, ABC):
+         self.current_mileage = current_mileage
+         self.last_service_mileage = last_service_mileage
+ 
+-    def engine_should_be_serviced(self):
++    def needs_service(self):
+         return self.current_mileage - self.last_service_mileage > 30000
+diff --git a/engine/sternman_engine.py b/engine/sternman_engine.py
+index 72d8b5a..1930e96 100644
+--- a/engine/sternman_engine.py
++++ b/engine/sternman_engine.py
+@@ -8,7 +8,7 @@ class SternmanEngine(Car, ABC):
+         super().__init__(last_service_date)
+         self.warning_light_is_on = warning_light_is_on
+ 
+-    def engine_should_be_serviced(self):
++    def needs_service(self):
+         if self.warning_light_is_on:
+             return True
+         else:
+diff --git a/engine/willoughby_engine.py b/engine/willoughby_engine.py
+index e5e0dc5..b2e884c 100644
+--- a/engine/willoughby_engine.py
++++ b/engine/willoughby_engine.py
+@@ -9,5 +9,5 @@ class WilloughbyEngine(Car, ABC):
+         self.current_mileage = current_mileage
+         self.last_service_mileage = last_service_mileage
+ 
+-    def engine_should_be_serviced(self):
++    def needs_service(self):
+         return self.current_mileage - self.last_service_mileage > 60000
+diff --git a/test/test_battery/__init__.py b/test/test_battery/__init__.py
+new file mode 100644
+index 0000000..e69de29
+diff --git a/test/test_battery/test_nubbin_battery.py b/test/test_battery/test_nubbin_battery.py
+new file mode 100644
+index 0000000..8712c47
+--- /dev/null
++++ b/test/test_battery/test_nubbin_battery.py
+@@ -0,0 +1,21 @@
++import unittest
++from datetime import date
++from battery.nubbin_battery import NubbinBattery
++
++class TestNubbinBattery(unittest.TestCase):
++    def test_nubbin_battery_should_be_replaced(self):
++        today = date.today()
++        last_service_date = today.replace(year=today.year - 5)
++
++        battery = NubbinBattery(last_service_date, 0, 0)
++        self.assertTrue(battery.needs_service())
++
++    def test_spindler_battery_should_not_be_replaced(self):
++        today = date.today()
++        last_service_date = today.replace(year=today.year - 3)
++
++        battery = NubbinBattery(last_service_date, 0, 0)
++        self.assertFalse(battery.needs_service())
++
++if __name__ == '__main__':
++    unittest.main()
+diff --git a/test/test_battery/test_spindler_battery.py b/test/test_battery/test_spindler_battery.py
+new file mode 100644
+index 0000000..77fb767
+--- /dev/null
++++ b/test/test_battery/test_spindler_battery.py
+@@ -0,0 +1,26 @@
++import unittest
++from datetime import date
++from battery.spindler_battery import SpindlerBattery
++
++class TestSpindlerBattery(unittest.TestCase):
++    def test_spindler_battery_should_be_replaced(self):
++        today = date.today()
++        last_service_date = today.replace(year=today.year - 3)
++
++        battery = SpindlerBattery(last_service_date, 0, 0)
++        self.assertTrue(battery.needs_service())
++
++    def test_spindler_battery_should_not_be_replaced(self):
++        today = date.today()
++        last_service_date = today.replace(year=today.year - 1)
++
++        battery = SpindlerBattery(last_service_date, 0, 0)
++        self.assertFalse(battery.needs_service())
++
++    # There is an error if you consider the months and/or days as well as the year. The date time function
++    # cannot compute going back before Jan (month 1); it cannot cycle back through the years. This can be
++    # fixed by writing the code in a similar style to how we wrote the function which checks whether the
++    # battery needs service.
++
++if __name__ == '__main__':
++    unittest.main()
+diff --git a/test/test_car.py b/test/test_car.py
+index de4ce7c..f599467 100644
+--- a/test/test_car.py
++++ b/test/test_car.py
+@@ -1,5 +1,5 @@
+ import unittest
+-from datetime import datetime, date
++from datetime import datetime
+ 
+ from engine.model.calliope import Calliope
+ from engine.model.glissade import Glissade
+diff --git a/test/test_engine/__init__.py b/test/test_engine/__init__.py
+new file mode 100644
+index 0000000..e69de29
+diff --git a/test/test_engine/test_capulet_engine.py b/test/test_engine/test_capulet_engine.py
+new file mode 100644
+index 0000000..4f2c80e
+--- /dev/null
++++ b/test/test_engine/test_capulet_engine.py
+@@ -0,0 +1,23 @@
++import unittest
++from datetime import date
++from engine.capulet_engine import CapuletEngine
++
++class TestCapuletEngine(unittest.TestCase):
++    def test_capulet_engine_should_be_replaced(self):
++        last_service_date = date.today()
++        current_mileage = 30001
++        last_service_milage = 0
++
++        engine = CapuletEngine(last_service_date, current_mileage, last_service_milage)
++        self.assertTrue(engine.needs_service())
++
++    def test_capulet_engine_shoul_not_be_replaced(self):
++        last_service_date = date.today()
++        current_mileage = 29000
++        last_service_milage = 0
++
++        engine = CapuletEngine(last_service_date, current_mileage, last_service_milage)
++        self.assertFalse(engine.needs_service())
++
++if __name__ == '__main__':
++    unittest.main()
+diff --git a/test/test_engine/test_sternman_engine.py b/test/test_engine/test_sternman_engine.py
+new file mode 100644
+index 0000000..652e4ed
+--- /dev/null
++++ b/test/test_engine/test_sternman_engine.py
+@@ -0,0 +1,21 @@
++import unittest
++from datetime import date
++from engine.sternman_engine import SternmanEngine
++
++class TestSternmanEngine(unittest.TestCase):
++    def test_sternman_engine_should_be_serviced(self):
++        last_service_date = date.today()
++        warning_light_is_on = True
++
++        engine = SternmanEngine(last_service_date, warning_light_is_on)
++        self.assertTrue(engine.needs_service())
++
++    def test_sternman_engine_should_not_be_serviced(self):
++        last_service_date = date.today()
++        warning_light_is_on = False
++
++        engine = SternmanEngine(last_service_date, warning_light_is_on)
++        self.assertFalse(engine.needs_service())
++
++if __name__ == '__main__':
++    unittest.main()
+\ No newline at end of file
+diff --git a/test/test_engine/test_willoughby_engine.py b/test/test_engine/test_willoughby_engine.py
+new file mode 100644
+index 0000000..4dc4b91
+--- /dev/null
++++ b/test/test_engine/test_willoughby_engine.py
+@@ -0,0 +1,23 @@
++import unittest
++from datetime import date
++from engine.willoughby_engine import WilloughbyEngine
++
++class TestWilloughbyEngine(unittest.TestCase):
++    def test_willoughby_engine_should_be_replaced(self):
++        last_service_date = date.today()
++        current_mileage = 60001
++        last_service_milage = 0
++
++        engine = WilloughbyEngine(last_service_date, current_mileage, last_service_milage)
++        self.assertTrue(engine.needs_service())
++
++    def test_willoughby_engine_shoul_not_be_replaced(self):
++        last_service_date = date.today()
++        current_mileage = 59000
++        last_service_milage = 0
++
++        engine = WilloughbyEngine(last_service_date, current_mileage, last_service_milage)
++        self.assertFalse(engine.needs_service())
++
++if __name__ == '__main__':
++    unittest.main()
+-- 
+2.39.3 (Apple Git-145)
+
