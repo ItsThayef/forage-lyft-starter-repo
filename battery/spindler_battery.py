@@ -7,5 +7,6 @@ class SpindlerBattery(Car, ABC):
         super().__init__(last_service_date)
         self.last_service_date = last_service_date
 
-    def battery_should_be_serviced(self):
-        return (date.today() - self.last_service_date)/365 < 2
+    def needs_service(self):
+        x = date.today() - self.last_service_date
+        return (x.days/365) >= 2
