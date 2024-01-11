@@ -9,4 +9,6 @@ class SpindlerBattery(Car, ABC):
 
     def needs_service(self):
         x = date.today() - self.last_service_date
-        return (x.days/365) >= 2
+        return (x.days/365) >= 3
+
+        # Changed years before service from 2 -> 3
